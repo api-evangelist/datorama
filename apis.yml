@@ -1,8 +1,27 @@
 aid: datorama
+accessModel:
+  pricing: unknown
+  onboarding: unknown
+  trial: false
+  try_now: false
+  public: false
+  label: Unknown
+  confidence: low
+  source: []
+  generated: '2026-07-22'
+  method: derived
+image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/icons/datorama.png
 name: Datorama
-description: Datorama is a company surfaced as a portfolio company of lightspeed-venture-partners and
-  added to the API Evangelist network as a stub for enrichment. This profile is a lead awaiting the enrichment
-  pipeline.
+description: >-
+  Datorama was a cloud-based marketing intelligence and analytics platform founded in 2012 in
+  Tel Aviv and New York. It unified marketing, advertising, and sales data from thousands of
+  disparate sources into a single AI-powered reporting and dashboarding layer, using its "Genius"
+  machine-learning engine to automate data harmonization across ad, social, web, and CRM APIs.
+  Salesforce acquired Datorama in August 2018 for a reported ~$800 million and rebranded it as
+  Salesforce Marketing Cloud Intelligence (Marketing Intelligence). The standalone datorama.com
+  domain now 301-redirects to the Salesforce Marketing Intelligence product page, and the former
+  standalone developer/API surface has been folded into Salesforce documentation. This profile
+  entered the API Evangelist network as a lightspeed-venture-partners portfolio lead.
 url: https://raw.githubusercontent.com/api-evangelist/datorama/refs/heads/main/apis.yml
 x-type: company
 x-source: vc-portfolio
@@ -10,14 +29,37 @@ x-backed-by:
 - lightspeed-venture-partners
 x-tier: stub
 x-tier-reason: portfolio-lead
+x-status: acquired
+x-acquired-by: salesforce
+x-acquired-date: '2018-08'
 specificationVersion: '0.20'
 created: '2026-07-17'
-modified: '2026-07-17'
+modified: '2026-07-18'
 tags:
 - Company
+- Analytics
+- Marketing
+- Marketing Intelligence
+- Advertising
+- Data
+- Business Intelligence
+- Reporting
+- Salesforce
 apis: []
 maintainers:
 - FN: Kin Lane
   email: kin@apievangelist.com
 - FN: APIs.json
   email: info@apis.io
+common:
+- type: DomainSecurity
+  url: security/datorama-domain-security.yml
+- type: Website
+  url: https://datorama.com
+- type: Product
+  url: https://www.salesforce.com/products/marketing-cloud/marketing-intelligence/
+x-enrichment:
+  date: '2026-07-19'
+  status: backfilled
+  pass: local-v1
+  note: backfilled from .gitignore signal + verified work evidence
