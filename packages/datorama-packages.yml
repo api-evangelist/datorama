@@ -1,0 +1,143 @@
+generated: '2026-08-12'
+method: searched
+source: >-
+  npm registry metadata (registry.npmjs.org) + PyPI JSON API, cross-checked against the
+  Datorama developer portal at https://developers.datorama.com/docs/build/apps/quick-start/
+  and https://developers.datorama.com/docs/build/apps/app-components/
+note: >-
+  Datorama is now Salesforce Marketing Cloud Intelligence. The first-party client tooling is
+  still published under the @datorama npm scope by Salesforce/Datorama maintainer accounts, and
+  the developer portal at developers.datorama.com is the document that names them. Versions and
+  publish dates below are read from the registries, not from prose. The decay signal here is
+  loud: every app/SDK package last shipped in 2023 or earlier, while the one 2026 release in the
+  scope is a brand-new MCP server (@datorama/mci-mcp-sdk, 2026-07-21) — the tooling investment
+  has moved from the JS app SDK to the agent surface.
+packages:
+- language: javascript
+  registry: npm
+  name: '@datorama/cli'
+  url: https://www.npmjs.com/package/@datorama/cli
+  install: npm install -g @datorama/cli
+  version: 0.5.4
+  published: '2023-09-14'
+  official: true
+  role: cli
+  description: >-
+    CLI for developing apps and connectors for the Datorama/Intelligence Marketplace. Exposes the
+    global `dato` command which authenticates with an Intelligence API token and serves an app
+    from localhost against a selected workspace and test app.
+- language: javascript
+  registry: npm
+  name: '@datorama/sdk'
+  url: https://www.npmjs.com/package/@datorama/sdk
+  install: npm install @datorama/sdk --save
+  version: 0.70.15
+  published: '2023-02-07'
+  official: true
+  license: Apache-2.0
+  role: sdk
+  description: >-
+    Intelligence JavaScript SDK for Marketplace apps. Provides DA.init/DA.app.onLoad lifecycle,
+    DA.api.{get,post,put,patch,delete} against the Platform and Query APIs, DA.requests queue and
+    batch manager, DA.websocket subscriptions, and DA.setMock request mocking for DEMO mode.
+  note: >-
+    The SDK change log published at
+    https://developers.datorama.com/docs/build/apps/sdk-change-log/ stops at 0.28.0 while the npm
+    latest is 0.70.15 — the portal changelog is materially behind the shipped package.
+- language: javascript
+  registry: npm
+  name: '@datorama/mci-mcp-sdk'
+  url: https://www.npmjs.com/package/@datorama/mci-mcp-sdk
+  install: npx -y @datorama/mci-mcp-sdk
+  version: 0.1.1
+  published: '2026-07-21'
+  official: true
+  role: mcp-server
+  homepage: https://www.salesforce.com/marketing/data-intelligence/
+  description: >-
+    Local stdio MCP server for Marketing Cloud Intelligence. Owns the OAuth2 service-account token
+    lifecycle and pass-through-proxies MCP JSON-RPC to a tenant MCI `/api/mcp` endpoint. Defines no
+    tools of its own; the tool list comes from the server.
+- language: javascript
+  registry: npm
+  name: '@datorama/app-components'
+  url: https://www.npmjs.com/package/@datorama/app-components
+  install: npm install --save @datorama/app-components
+  version: 2.11.24
+  published: '2023-02-26'
+  official: true
+  license: MIT
+  role: ui-components
+  description: >-
+    Shared ReactJS UI component library for Intelligence Marketplace apps (lightTheme/darkTheme via
+    AppTheme + styled-components). Documented at
+    https://developers.datorama.com/docs/build/apps/app-components/
+- language: javascript
+  registry: npm
+  name: '@datorama/marketplace-react'
+  url: https://www.npmjs.com/package/@datorama/marketplace-react
+  install: npm install @datorama/marketplace-react
+  version: 0.25.37
+  published: '2023-02-09'
+  official: true
+  license: MIT
+  role: ui-components
+  description: Datorama Marketplace React utilities.
+- language: javascript
+  registry: npm
+  name: '@datorama/marketplace-widgets'
+  url: https://www.npmjs.com/package/@datorama/marketplace-widgets
+  install: npm install @datorama/marketplace-widgets
+  version: 0.4.5
+  published: '2020-10-28'
+  official: true
+  license: MIT
+  role: ui-components
+  description: Datorama Marketplace React widget library.
+- language: python
+  registry: pypi
+  name: datorama
+  url: https://pypi.org/project/datorama/
+  install: pip install datorama
+  version: '0.8'
+  published: '2020-01-15'
+  official: true
+  role: connector-sdk
+  description: >-
+    Datorama Python package for building custom connectors. Declared home page is
+    https://github.com/datorama/python-connector-package, which now 404s — the datorama GitHub
+    organization was folded into github.com/salesforce after the acquisition.
+- language: javascript
+  registry: npm
+  name: '@datorama/akita'
+  url: https://www.npmjs.com/package/@datorama/akita
+  install: npm install @datorama/akita
+  version: 8.0.1
+  published: '2023-02-13'
+  official: true
+  license: Apache-2.0
+  role: open-source-library
+  api_client: false
+  description: >-
+    Reactive state-management library open-sourced by Datorama. NOT an Intelligence API client —
+    recorded because it is the company's most visible first-party package. The repository now lives
+    at https://github.com/salesforce/akita and is ARCHIVED (last push 2025-05-01).
+third_party:
+- language: python
+  registry: pypi
+  name: pydatorama
+  url: https://pypi.org/project/pydatorama/
+  version: '0.11'
+  published: '2021-06-01'
+  official: false
+  description: >-
+    Community Python wrapper for the Datorama platform. Not published by Salesforce/Datorama.
+registries_checked:
+- {registry: npm, result: 8 first-party packages found}
+- {registry: pypi, result: 1 first-party (datorama) + 1 community (pydatorama)}
+- {registry: rubygems, result: none}
+- {registry: packagist, result: none}
+- {registry: nuget, result: none}
+- {registry: crates.io, result: none}
+- {registry: maven-central, result: none}
+- {registry: pkg.go.dev, result: none}

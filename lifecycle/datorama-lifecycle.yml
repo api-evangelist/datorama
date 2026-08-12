@@ -1,0 +1,83 @@
+generated: '2026-08-12'
+method: searched
+source: https://developers.datorama.com/docs/query/migration-guide/
+docs:
+- https://developers.datorama.com/docs/query/migration-guide/
+- https://developers.datorama.com/docs/manage/introduction/
+- https://developers.datorama.com/docs/build/apps/sdk-change-log/
+versioning:
+  scheme: uri-path
+  current: v1
+  base: https://api.datorama.com/v1
+  docs: https://developers.datorama.com/docs/manage/introduction/
+  note: >-
+    Every documented path is under /v1. No date-based or header-based versioning, no version
+    negotiation, and no published policy describing how a v2 would be introduced.
+deprecation:
+  policy_url: null
+  policy_published: false
+  sunset_header: false
+  deprecation_header: false
+  rfc8594: false
+  note: >-
+    No general deprecation policy is published. Datorama has, however, executed a real API sunset
+    with a dated notice and a migration guide, recorded below — evidence of practice, not of
+    policy.
+  precedents:
+  - id: query-api-v1-sunset
+    what: The old Query API was sunset in favour of the new Query API.
+    announcement_verbatim: >-
+      "We at Intelligence are hereby announcing that the old Query API will be sunset and only the
+      new Query API will be available starting May 28 2019"
+    sunset_date: '2019-05-28'
+    rationale_verbatim: >-
+      "This change is coming in order to have more efficient endpoints, clearer logs and better
+      overall performance."
+    migration_guide: https://developers.datorama.com/docs/query/migration-guide/
+    changes:
+    - Authentication moved to the user's API token in an `Authorization` header
+    - Endpoints changed for both single-query and batch-query execution
+    - Parameter changes documented in a comparison table
+    - Rate limiting introduced (200 Query API calls/minute, 20,000 calls/day shared with the Platform API)
+status_page:
+  url: https://status.salesforce.com/products/Datorama
+  vanity_url: https://trust.datorama.com
+  vanity_note: >-
+    trust.datorama.com 301s to the Salesforce Trust status page filtered to the Datorama product —
+    a product-specific status surface still carrying the Datorama name post-acquisition.
+  probed: '2026-08-12'
+  http_status: 200
+  javascript_required: true
+sla:
+  url: null
+  uptime_target: null
+  note: >-
+    No public SLA or uptime target for the API. Support tiers are published on the pricing page
+    (Standard included, Premier at 30% of net license fees, Signature by quote) and Premier Support
+    is stated to be included in all editions of Marketing Cloud Intelligence.
+release_notes:
+- name: Earlier Marketing Cloud Intelligence Release Notes
+  url: https://help.salesforce.com/s/articleView?id=sf.mc_release_notes_datorama.htm&language=en_US&type=5
+  http_status: 200
+- name: Apps JS SDK change log
+  url: https://developers.datorama.com/docs/build/apps/sdk-change-log/
+  note: Version-numbered but undated, and last entry is 0.28.0 while npm ships 0.70.15.
+deprecated_operations: []
+decay_signals:
+- >-
+    Developer-portal SDK change log stops at 0.28.0; @datorama/sdk on npm is 0.70.15 (2023-02-07).
+- >-
+    Every app/SDK/component package in the @datorama npm scope last published in 2023 or earlier;
+    the sole 2026 release is the new MCP server (@datorama/mci-mcp-sdk, 2026-07-21).
+- >-
+    The docs' own "Endpoints" tables do not render: the deployed Gatsby bundle at
+    developers.datorama.com references webpack modules 8385 (the Requests component) and 6645
+    (content/docs/manage/requests, the endpoint definitions) which are not present in any served
+    chunk. The prose renders; the method+path tables do not.
+- >-
+    The Python connector package on PyPI points at github.com/datorama/python-connector-package,
+    which 404s — the datorama GitHub org was folded into github.com/salesforce, and the flagship
+    open-source repo (akita) is archived.
+- >-
+    The component library's linked gallery is at app-components.herokuapp.com, on a Heroku tier
+    retired in 2022.

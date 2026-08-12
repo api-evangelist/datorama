@@ -1,0 +1,90 @@
+generated: '2026-08-12'
+method: searched
+source: https://developers.datorama.com/docs/manage/introduction/
+docs:
+- https://developers.datorama.com/docs/manage/introduction/
+- https://developers.datorama.com/docs/query/introduction/
+- https://developers.datorama.com/docs/query/migration-guide/
+limit_count: 3
+note: >-
+  Datorama publishes both the numbers AND the runtime response headers, which is the useful half.
+  The limit is enforced per USER, not per account — the docs state explicitly that 1 API user gives
+  an account 20,000 calls/day and 2 API users give it 40,000. The daily quota is shared across the
+  Platform API and the Query API; the per-minute limits are separate per API.
+limits:
+- id: platform-api-per-minute
+  scope: per-user
+  api: Intelligence Platform API
+  window: 1 minute
+  limit: 60
+  unit: requests
+  evidence: >-
+    The docs' rate-limit table renders the Platform per-minute cell from a data file that is not
+    served with the deployed bundle; the value 60 is taken from the provider's own successful-
+    request example, which shows `X-PlatformRateLimit-Limit: 60`.
+  source: https://developers.datorama.com/docs/manage/introduction/
+- id: query-api-per-minute
+  scope: per-user
+  api: Intelligence Query API
+  window: 1 minute
+  limit: 200
+  unit: requests
+  evidence: >-
+    Stated as "200 Query API calls per minute" in the Query API migration guide and confirmed by
+    `X-QueryRateLimit-Limit: 200` in the documented response example.
+  source: https://developers.datorama.com/docs/query/migration-guide/
+- id: daily-quota
+  scope: per-user
+  api: all (Platform + Query combined)
+  window: 24 hours, UTC
+  limit: 20000
+  unit: requests
+  note: >-
+    Verbatim: "The daily quota is enforced no matter which API calls are made. For example, a user
+    who performs 15,000 query API calls + 5,000 platform API calls will reach the daily quota, and
+    any further API calls from that user will be blocked until the end of the time window."
+  source: https://developers.datorama.com/docs/manage/introduction/
+response_headers:
+- header: X-PlatformRateLimit-Limit
+  meaning: Platform API per-minute ceiling
+- header: X-PlatformRateLimit-Remaining
+  meaning: Platform API calls left in the current minute
+- header: X-PlatformRateLimit-Reset
+  meaning: Epoch milliseconds (UTC) when the next minute window opens
+- header: X-QueryRateLimit-Limit
+  meaning: Query API per-minute ceiling
+- header: X-QueryRateLimit-Remaining
+  meaning: Query API calls left in the current minute
+- header: X-QueryRateLimit-Reset
+  meaning: Epoch milliseconds (UTC) when the next minute window opens
+- header: X-DailyQuota-Limit
+  meaning: Daily ceiling across both APIs
+- header: X-DailyQuota-Remaining
+  meaning: Calls left in the current 24h UTC window
+- header: X-DailyQuota-Reset
+  meaning: Epoch milliseconds (UTC) when the daily window opens
+exhaustion:
+  status_code: 429
+  status_text: Too Many Requests
+  retry_headers: [X-RateLimit-Reset, X-DailyQuota-Rest]
+  retry_header_note: >-
+    The docs name the retry-signalling headers as `X-RateLimit-Reset` and `X-DailyQuota-Rest` on
+    the 429 path, which does not match the `X-PlatformRateLimit-Reset` /
+    `X-QueryRateLimit-Reset` / `X-DailyQuota-Reset` names shown on the 200 path (and `Rest` looks
+    like a typo for `Reset`). Recorded as published; an integrator should read whichever arrives.
+  retry_after_header: false
+  guidance_verbatim: >-
+    "As a best practice, we recommend that clients employ a debounce / throttle / backoff strategy
+    after being rate limited to avoid triggering rate limits again."
+  escalation: "If you intend to exceed the above limits, please contact your account manager."
+other_ceilings:
+- id: query-api-timeout
+  api: Intelligence Query API
+  value: 60 seconds
+  note: Synchronous; intended for result sets up to ~600,000 rows.
+  source: https://developers.datorama.com/docs/query/query-vs-reporting-api/
+- id: reporting-api-timeout
+  api: Reporting API
+  value: 40 minutes
+  note: Asynchronous; handles result sets up to ~5,000,000 rows, polled by report-job id.
+  source: https://developers.datorama.com/docs/query/query-vs-reporting-api/

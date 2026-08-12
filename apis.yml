@@ -1,40 +1,56 @@
 aid: datorama
 accessModel:
-  pricing: unknown
-  onboarding: unknown
+  pricing: paid
+  onboarding: sales-assisted
   trial: false
   try_now: false
   public: false
-  label: Unknown
-  confidence: low
-  source: []
-  generated: '2026-07-22'
-  method: derived
+  label: Paid, sales-assisted, API access separately entitled
+  confidence: high
+  source:
+  - https://www.salesforce.com/marketing/analytics/pricing/
+  - https://developers.datorama.com/docs/manage/introduction/
+  generated: '2026-08-12'
+  method: searched
+  note: >-
+    Two published org-level plans (US$10,000 and US$11,000 per org per month, billed annually), both
+    with a "Contact us" call to action. API access is an additional paid feature that depends on the
+    account plan AND requires user-level activation by the account manager; a user without it never
+    sees an API token.
 image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/icons/datorama.png
 name: Datorama
 description: >-
-  Datorama was a cloud-based marketing intelligence and analytics platform founded in 2012 in
-  Tel Aviv and New York. It unified marketing, advertising, and sales data from thousands of
-  disparate sources into a single AI-powered reporting and dashboarding layer, using its "Genius"
-  machine-learning engine to automate data harmonization across ad, social, web, and CRM APIs.
-  Salesforce acquired Datorama in August 2018 for a reported ~$800 million and rebranded it as
-  Salesforce Marketing Cloud Intelligence (Marketing Intelligence). The standalone datorama.com
-  domain now 301-redirects to the Salesforce Marketing Intelligence product page, and the former
-  standalone developer/API surface has been folded into Salesforce documentation. This profile
-  entered the API Evangelist network as a lightspeed-venture-partners portfolio lead.
+  Datorama was a cloud-based marketing intelligence and analytics platform founded in 2012 in Tel
+  Aviv and New York. It unified marketing, advertising, and sales data from thousands of disparate
+  sources into a single AI-powered reporting and dashboarding layer, using its "Genius" machine
+  learning engine to automate data harmonization across ad, social, web, and CRM APIs. Salesforce
+  acquired Datorama in August 2018 for a reported ~$800 million and rebranded it as Salesforce
+  Marketing Cloud Intelligence. The marketing, pricing, legal, trust and support surfaces have moved
+  to salesforce.com, but the developer surface is still live on the original domain: a Gatsby
+  developer portal at developers.datorama.com documents an Intelligence Platform API and a
+  synchronous Query API on https://api.datorama.com/v1, both authenticated with a per-user personal
+  access token in an Authorization header, both rate limited per user (60 platform req/min, 200
+  query req/min, 20,000 calls/day UTC) with X-PlatformRateLimit-*, X-QueryRateLimit-* and
+  X-DailyQuota-* response headers, plus an asynchronous Reporting API for large exports, a
+  header-switched sandbox mode, an Apps JavaScript SDK and a `dato` CLI on npm, a custom-connector
+  framework, and — new in July 2026 — a first-party MCP server (@datorama/mci-mcp-sdk) that proxies
+  MCP JSON-RPC to a tenant /api/mcp endpoint using an OAuth2 service-account key. No OpenAPI,
+  AsyncAPI, GraphQL SDL, llms.txt, /.well-known/ document or A2A agent card is published anywhere on
+  the surface. This profile entered the API Evangelist network as a lightspeed-venture-partners
+  portfolio lead.
 url: https://raw.githubusercontent.com/api-evangelist/datorama/refs/heads/main/apis.yml
 x-type: company
 x-source: vc-portfolio
 x-backed-by:
 - lightspeed-venture-partners
-x-tier: stub
-x-tier-reason: portfolio-lead
+x-tier: profiled
+x-tier-reason: live-developer-portal-and-first-party-mcp-server
 x-status: acquired
 x-acquired-by: salesforce
 x-acquired-date: '2018-08'
 specificationVersion: '0.20'
 created: '2026-07-17'
-modified: '2026-07-18'
+modified: '2026-08-12'
 tags:
 - Company
 - Analytics
@@ -45,21 +61,162 @@ tags:
 - Business Intelligence
 - Reporting
 - Salesforce
-apis: []
+- Marketing Analytics
+- Data Harmonization
+- Dashboards
+- MCP
+apis:
+- name: Intelligence Platform API
+  description: >-
+    REST API to set up, manage and administer a Marketing Cloud Intelligence (Datorama) account —
+    accounts, workspaces, users, permission sets, data streams, connectors, data source
+    authentications, buckets, dimensions, harmonized/calculated/filtered measurements, data fusions,
+    data lakes, dashboards, pages, reports, report schedulers, report jobs, actions, Insights Bot
+    and sandbox operations. Documented for automating large setups, bulk create/update of entities,
+    and exporting existing entities. Authenticated with a per-user personal API access token in the
+    Authorization header; PATCH is the recommended partial update and a partial PUT clears omitted
+    fields. Add the `sandbox-mode: true` header to execute against the Intelligence sandbox.
+  humanURL: https://developers.datorama.com/docs/manage/introduction/
+  baseURL: https://api.datorama.com/v1
+  tags:
+  - Marketing Intelligence
+  - Administration
+  - Data Management
+  - Reporting
+  properties:
+  - type: Documentation
+    url: https://developers.datorama.com/docs/manage/introduction/
+  - type: APIReference
+    url: https://developers.datorama.com/docs/manage/reference/
+  - type: Authentication
+    url: authentication/datorama-authentication.yml
+  - type: RateLimits
+    url: rate-limits/datorama-rate-limits.yml
+  - type: Conventions
+    url: conventions/datorama-conventions.yml
+  - type: DataModel
+    url: data-model/datorama-data-model.yml
+  - type: Sandbox
+    url: sandbox/datorama-sandbox.yml
+- name: Intelligence Query API
+  description: >-
+    Synchronous JSON query API for reading harmonized Marketing Cloud Intelligence (Datorama) data
+    out into any other platform, including all classifications and calculations. POST /v1/query and
+    POST /v1/query-batch accept a workspace, date range, dimensions, measurements, filters, sort and
+    top-results shape; add useSystemNames=true to receive system names instead of display names. It
+    has a 60-second timeout and is intended for result sets up to ~600,000 rows — larger workloads
+    move to the asynchronous Reporting API. Query-parse failures return HTTP 422; runtime failures
+    return HTTP 200 with a populated `errors` property, so a client must inspect `errors` before
+    reading results.
+  humanURL: https://developers.datorama.com/docs/query/introduction/
+  baseURL: https://api.datorama.com/v1
+  tags:
+  - Marketing Intelligence
+  - Query
+  - Analytics
+  - Data Export
+  properties:
+  - type: Documentation
+    url: https://developers.datorama.com/docs/query/introduction/
+  - type: APIReference
+    url: https://developers.datorama.com/docs/query/query-reference/
+  - type: Authentication
+    url: authentication/datorama-authentication.yml
+  - type: RateLimits
+    url: rate-limits/datorama-rate-limits.yml
+  - type: ErrorCatalog
+    url: errors/datorama-problem-types.yml
+  - type: Lifecycle
+    url: lifecycle/datorama-lifecycle.yml
 maintainers:
 - FN: Kin Lane
   email: kin@apievangelist.com
 - FN: APIs.json
   email: info@apis.io
 common:
-- type: DomainSecurity
-  url: security/datorama-domain-security.yml
 - type: Website
   url: https://datorama.com
 - type: Product
-  url: https://www.salesforce.com/products/marketing-cloud/marketing-intelligence/
+  url: https://www.salesforce.com/marketing/analytics/
+- type: DeveloperPortal
+  url: https://developers.datorama.com/
+- type: Documentation
+  url: https://developers.datorama.com/docs/
+- type: APIReference
+  url: https://developers.datorama.com/docs/manage/reference/
+- type: GettingStarted
+  url: https://developers.datorama.com/docs/build/apps/quick-start/
+- type: Support
+  url: https://help.salesforce.com/s/
+- type: Pricing
+  url: https://www.salesforce.com/marketing/analytics/pricing/
+- type: Login
+  url: https://platform.datorama.com/
+- type: TermsOfService
+  url: https://www.salesforce.com/company/legal/sfdc-website-terms-of-service/
+- type: PrivacyPolicy
+  url: https://www.salesforce.com/company/legal/privacy/
+- type: StatusPage
+  url: https://status.salesforce.com/products/Datorama
+- type: Security
+  url: https://security.salesforce.com/responsible-disclosure-policy/
+- type: Compliance
+  url: https://compliance.salesforce.com/en/services/marketing-cloud-intelligence
+- type: VulnerabilityDisclosure
+  url: security/datorama-vulnerability-disclosure.yml
+- type: TrustCenter
+  url: security/datorama-trust-center.yml
+- type: Plans
+  url: plans/datorama-plans-pricing.yml
+- type: RateLimits
+  url: rate-limits/datorama-rate-limits.yml
+- type: Authentication
+  url: authentication/datorama-authentication.yml
+- type: Conventions
+  url: conventions/datorama-conventions.yml
+- type: ErrorCatalog
+  url: errors/datorama-problem-types.yml
+- type: Lifecycle
+  url: lifecycle/datorama-lifecycle.yml
+- type: ChangeLog
+  url: changelog/datorama-changelog.yml
+- type: Sandbox
+  url: sandbox/datorama-sandbox.yml
+- type: DataModel
+  url: data-model/datorama-data-model.yml
+- type: Conformance
+  url: conformance/datorama-conformance.yml
+- type: Packages
+  url: packages/datorama-packages.yml
+- type: SDKs
+  url: packages/datorama-packages.yml
+- type: CLI
+  url: cli/datorama-cli.yml
+- type: Components
+  url: components/datorama-components.yml
+- type: MCPServer
+  url: mcp/datorama-mcp.yml
+- type: LLMsTxt
+  url: llms/datorama-llms.txt
+- type: DomainSecurity
+  url: security/datorama-domain-security.yml
 x-enrichment:
-  date: '2026-07-19'
-  status: backfilled
+  date: '2026-08-12'
+  status: enriched
+  artifacts_added: 18
   pass: local-v1
-  note: backfilled from .gitignore signal + verified work evidence
+x-coverage:
+  state: covered
+  detail: >-
+    developers.datorama.com is a live Gatsby developer portal with 84 documented pages; its prose
+    was recovered through the deployed webpack source maps, but the endpoint (method + path) tables
+    do not render because the shipped bundle is missing the modules that hold them, so no operation
+    list could be captured.
+  evidence:
+  - url: https://developers.datorama.com/sitemap-0.xml
+    status: 200
+  - url: https://api.datorama.com/openapi.json
+    status: 200
+  - url: https://www.npmjs.com/package/@datorama/mci-mcp-sdk
+    status: 200
+  checked: '2026-08-12'

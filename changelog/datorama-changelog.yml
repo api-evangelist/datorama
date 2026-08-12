@@ -1,0 +1,72 @@
+generated: '2026-08-12'
+method: searched
+source: https://developers.datorama.com/docs/build/apps/sdk-change-log/
+docs:
+- https://developers.datorama.com/docs/build/apps/sdk-change-log/
+- https://help.salesforce.com/s/articleView?id=sf.mc_release_notes_datorama.htm&language=en_US&type=5
+scheme: semver
+subject: '@datorama/sdk (Intelligence Apps JavaScript SDK)'
+current_version_published_in_changelog: 0.28.0
+current_version_on_npm: 0.70.15
+npm_published: '2023-02-07'
+dated: false
+note: >-
+  Datorama publishes exactly one developer-facing changelog: the Apps JS SDK change log. It is
+  version-numbered but carries NO DATES, and it stops at 0.28.0 while the package on npm has since
+  shipped to 0.70.15 — so it is both undated and materially stale. API-level changes (Platform API
+  and Query API) have no changelog at all; the only API-change record is the one-off 2019 Query API
+  migration guide captured in lifecycle/. Salesforce's own archived Marketing Cloud Intelligence
+  release notes are listed as the product-level companion.
+entries:
+- version: 0.28.0
+  date: null
+  additions:
+  - Support for uploading files
+  - Navigation to Insights Bot opens in a new tab
+- version: 0.27.1
+  date: null
+  additions: [Request body added to mocked request responses]
+- version: 0.27.0
+  date: null
+  breaking: true
+  highlights: ['promiseBased set as the default (callback style now opt-in via {promiseBased: false})']
+- version: 0.26.0
+  date: null
+  additions:
+  - locale added to config.user
+  - Request queue gained a key on batch requests and an "aborted" status
+- version: 0.25.0
+  date: null
+  additions: ['App screenshot capture: DA.app.snapshot.take() / DA.app.snapshot.end()']
+- version: 0.24.0
+  date: null
+  fixes: [Internal web sockets]
+- version: 0.23.0
+  date: null
+  additions: ['Batch-response flag (batch: bool)']
+  fixes: [Batch request response shape]
+- version: 0.22.0
+  date: null
+  additions:
+  - abbreviate and precision options on DA.app.format
+  - Request queue manager supports dynamic keys
+- version: 0.21.0
+  date: null
+  additions:
+  - 'WebSocket support: DA.websocket.subscribe(topic, callback)'
+  - 'DA.websocket.subscribeWithPayload(topic, queryId, payload, callback)'
+- version: 0.20.0
+  date: null
+  additions:
+  - Dimension and metric formatter (DA.app.format)
+  - Config migrations via DA.app.setMigration(version, fn)
+  - New API request queue manager (DA.requests.dispatch)
+product_release_notes:
+  name: Earlier Marketing Cloud Intelligence Release Notes
+  url: https://help.salesforce.com/s/articleView?id=sf.mc_release_notes_datorama.htm&language=en_US&type=5
+  http_status: 200
+  note: Salesforce Help article; product-level, not API-level, and archived.
+gaps:
+- No dated changelog for the Intelligence Platform API.
+- No dated changelog for the Intelligence Query API.
+- The published SDK changelog has no dates and trails the shipped package by 42 minor versions.

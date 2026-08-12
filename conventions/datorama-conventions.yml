@@ -1,0 +1,114 @@
+generated: '2026-08-12'
+method: searched
+source: https://developers.datorama.com/docs/manage/introduction/
+docs:
+- https://developers.datorama.com/docs/manage/introduction/
+- https://developers.datorama.com/docs/query/introduction/
+- https://developers.datorama.com/docs/query/dimension-values/
+- https://developers.datorama.com/docs/build/apps/making-api-calls/
+note: >-
+  Cross-cutting request/response semantics for the Intelligence (Datorama) Platform and Query APIs,
+  read from the provider's own documentation. There is no OpenAPI to derive from.
+authentication:
+  style: api-key-in-authorization-header
+  header: Authorization
+  bearer_prefix: false
+  detail: see authentication/datorama-authentication.yml
+idempotency:
+  supported: false
+  header: null
+  note: >-
+    Datorama documents no idempotency key, no request-replay contract, and no safe-retry guidance
+    beyond backoff after a 429. Writes are plain POST/PUT/PATCH/DELETE. Recorded as absent — no
+    Idempotency pointer is emitted for this provider.
+updates:
+  partial: PATCH
+  full: PUT
+  recommendation: >-
+    "When updating existing entities via the platform API, as a best practice we highly recommend
+    that you use HTTP PATCH endpoints and only send the fields you'd like to change."
+  destructive_put_warning: >-
+    "Sending only part of the fields in PUT requests will effectively clear data that was saved in
+    the attributes that weren't sent." A full update requires fetching the entity first and sending
+    it back in its entirety.
+server_managed_fields:
+  name: entity history
+  applies_to: every Platform API entity (not repeated per-entity in the docs)
+  fields:
+  - {name: createUserId, type: Integer, description: ID of the user who created the entity}
+  - {name: createUser, type: String, description: Full name of the user who created the entity}
+  - {name: createTime, type: Timestamp, description: Unix epoch milliseconds the entity was created}
+  - {name: updateUserId, type: Integer, description: ID of the user who last updated the entity}
+  - {name: updateUser, type: String, description: Full name of the user who last updated the entity}
+  - {name: updateTime, type: Timestamp, description: Unix epoch milliseconds the entity was last updated}
+  write_behaviour: >-
+    "These fields should not be sent when trying to create or update entities (via POST or PUT
+    requests). Even if they're sent they will be ignored by the API and replaced by our internal
+    logic."
+  timestamp_format: Unix epoch MILLISECONDS (e.g. 1366620612000)
+pagination:
+  style: page-offset
+  scope: >-
+    Documented for the dimension-values endpoint: "each request to fetch dimension values returns a
+    paginated result. In order to explore through all the dimension's values, multiple requests are
+    necessary with a different page offset each time."
+  cursor: false
+  docs: https://developers.datorama.com/docs/query/dimension-values/
+  note: >-
+    No account-wide pagination envelope is documented for the Platform API collection endpoints.
+naming:
+  display_vs_system_names: >-
+    The Query API returns display names for dimensions and measurements by default (e.g. "Clicks").
+    Add `useSystemNames=true` to the URL to get system names instead (e.g. "DELIVERY_CLICKS").
+  source: https://developers.datorama.com/docs/query/performing-queries/
+versioning:
+  scheme: uri-path
+  current: v1
+  base: https://api.datorama.com/v1
+  detail: see lifecycle/datorama-lifecycle.yml
+environments:
+  model: multi-region tenanted
+  warning_verbatim: >-
+    "Please note that there are multiple environments in Intelligence, and hence, you cannot use
+    static ids when making any API calls."
+  regions:
+  - {id: us, api_host: api.datorama.com, platform_host: platform.datorama.com, cli_env: null}
+  - {id: app-eu, note: EU on AWS, api_host: api-eu.datorama.com, platform_host: platform-eu.datorama.com, cli_env: --env=app-eu}
+  - {id: app-eu2, note: EU2 on Azure, api_host: api-eu2.datorama.com, platform_host: platform-eu2.datorama.com, cli_env: --env=app-eu2}
+  - {id: app-us2, note: US2 on Azure, api_host: api-us2.datorama.com, platform_host: platform-us2.datorama.com, cli_env: --env=app-us2}
+  region_evidence: >-
+    The CLI quick-start documents --env=app-eu / app-eu2 / app-us2; app-eu.datorama.com,
+    app-eu2.datorama.com, app-us2.datorama.com and the matching api-* hosts all resolve and
+    redirect to their regional platform host (probed 2026-08-12).
+sandbox_switch:
+  header: sandbox-mode
+  value: 'true'
+  default_behaviour: >-
+    "If the header doesn't exist or is set to false the API call will be executed in production."
+  detail: see sandbox/datorama-sandbox.yml
+error_envelope:
+  platform_api: standard HTTP status codes; no RFC 9457 problem+json
+  query_api: >-
+    Two-track: HTTP 422 for query-parse failures, and a 200 that carries a non-empty `errors`
+    property for runtime failures. A client MUST check `errors` on a 200 before reading results.
+  detail: see errors/datorama-problem-types.yml
+rate_limit_signalling:
+  headers: [X-PlatformRateLimit-*, X-QueryRateLimit-*, X-DailyQuota-*]
+  exhaustion_status: 429
+  detail: see rate-limits/datorama-rate-limits.yml
+request_tracing:
+  request_id_header: null
+  note: No request-id / correlation-id header is documented.
+cors:
+  note: >-
+    For app-to-third-party integrations the developer's own server must return
+    `Access-Control-Allow-Origin: *` on OPTIONS requests to avoid cross-origin failures. This is
+    guidance about the integrator's server, not about the Intelligence API.
+  source: https://developers.datorama.com/docs/build/apps/making-api-calls/
+client_side_request_management:
+  note: >-
+    Not a wire convention — the Apps JS SDK ships a request queue (DA.requests.dispatch) with
+    modes `prevent`, `sequential` and `last`, plus batch modes `all` and `allSettled`, and a
+    subscription with statuses waiting/pending/success/error/aborted. This is the closest thing
+    Datorama publishes to concurrency control, and it lives in the client library, not the API.
+  source: https://developers.datorama.com/docs/build/apps/making-api-calls/

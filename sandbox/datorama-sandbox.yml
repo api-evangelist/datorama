@@ -1,0 +1,65 @@
+generated: '2026-08-12'
+method: searched
+source: https://developers.datorama.com/docs/manage/introduction/
+docs:
+- https://developers.datorama.com/docs/manage/introduction/
+- https://developers.datorama.com/docs/manage/sandbox-operations/
+- https://developers.datorama.com/docs/build/apps/local-development/
+- https://developers.datorama.com/docs/build/apps/making-api-calls/
+- https://help.salesforce.com/s/articleView?id=sf.dato_getstarted_sbox_use.htm&type=5
+note: >-
+  Datorama publishes no test credentials and no magic test values — there is no test-mode key
+  prefix and no synthetic data set. What it publishes instead is a header-switched sandbox that
+  runs ON TOP of production, plus a local app-development harness with request mocking. The most
+  important caveat is the provider's own: the sandbox is not isolated, and deploying sandbox
+  entities changes production.
+api_sandbox:
+  mechanism: request-header switch
+  header: sandbox-mode
+  value: 'true'
+  default: >-
+    "If the header doesn't exist or is set to false the API call will be executed in production."
+  scope: account-level — all workspaces under the account have access to the sandbox environment
+  isolation: partial
+  isolation_warning_verbatim: >-
+    "The Intelligence sandbox is a testing environment built on top of the production environment
+    that allows users to test setup configurations and data changes all within Intelligence. ...
+    Since sandbox works alongside the production environment, when sandbox entities are deployed,
+    changes occur in production."
+  coverage: >-
+    Not every endpoint supports it. The docs mark supported endpoints individually ("All supported
+    endpoints are marked") in the endpoint tables.
+  operations_api:
+    name: Sandbox Operations API
+    purpose: Manage changes made to entities in sandbox mode, and deploy them.
+    objects: [Sandbox Management Object, Deployment Request Object]
+    requirement: Operations must be executed with the `sandbox-mode` header set to true.
+    docs: https://developers.datorama.com/docs/manage/sandbox-operations/
+test_credentials:
+  published: false
+  note: >-
+    No test API token, no test-vs-live key prefix, no test card / test identifier ranges. API
+    access itself is a paid, per-user activated feature, so there is no anonymous trial credential.
+app_development_harness:
+  test_app:
+    where: Intelligence platform > Apps > Dev Playground > "Create a New Test App"
+    purpose: The app registration a developer targets while running the CLI on localhost.
+  run_modes:
+  - {mode: DEMO, description: "Standalone browser tab, independent of the platform; API calls are mocked. Recommended starting point for new apps."}
+  - {mode: INSTALL, description: "Admin configuring the app; the config JSON is persisted server-side. CLI default mode."}
+  - {mode: RUN, description: "Normal use; the previously saved config is passed to DA.app.onLoad."}
+  mode_override: >-
+    The only way to override the run mode Intelligence determines is to mock it in `DA.init`.
+  request_mocking:
+    method: DA.setMock({requests})
+    call_order: Must be called immediately after DA.init.
+    shape: >-
+      A JavaScript Map keyed by {path, method}, valued by a success response or an
+      {error: {status, data, delay}} object — so failure paths and latency can be simulated
+      locally.
+    example_error: '{error: {status: 500, data: "Something went wrong", delay: 3000}}'
+  docs: https://developers.datorama.com/docs/build/apps/local-development/
+gaps:
+- No hosted sandbox environment separate from production.
+- No published test data set, test tokens or seeded fixtures.
+- No time simulation / test clock.

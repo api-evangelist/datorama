@@ -1,0 +1,94 @@
+generated: '2026-08-12'
+method: searched
+source: https://developers.datorama.com/docs/manage/introduction/
+docs:
+- https://developers.datorama.com/docs/manage/introduction/
+- https://developers.datorama.com/docs/query/introduction/
+- https://developers.datorama.com/docs/query/migration-guide/
+- https://help.salesforce.com/s/articleView?id=sf.dato_getstarted_token_api.htm&type=5
+note: >-
+  Derived from the provider's own documentation, not from a spec — Datorama publishes no OpenAPI,
+  so there are no securitySchemes to aggregate. The Platform API and the Query API share one auth
+  model: a personal API access token sent in a bare `Authorization` header (no `Bearer` prefix in
+  the documented example). The newer MCI MCP server uses a different, stronger model — OAuth2
+  service-account key exchange — which is recorded separately below.
+summary:
+  types: [apiKey, oauth2]
+  api_key_in: [header]
+  oauth2_flows: [client-credentials-service-account]
+  token_scoping: per-user (rate limits and permissions are enforced at the user level)
+  gated: true
+  gate_note: >-
+    API access is a PAID feature that depends on the account's plan and requires user-level
+    activation by the account manager / client success manager. A user without API access sees no
+    access token on their profile page.
+schemes:
+- name: IntelligenceApiToken
+  type: apiKey
+  in: header
+  parameter_name: Authorization
+  format: >-
+    A UUID-shaped personal access token. The migration guide shows a `dato-api-` prefixed form
+    (`dato-api-XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX`); the current platform/query docs show the
+    bare UUID form.
+  bearer_prefix: false
+  applies_to: [Intelligence Platform API, Intelligence Query API, Reporting API]
+  generation: >-
+    Generated inside the Intelligence platform under "My Profile" (top-right menu > your name, or
+    Ctrl+K / Cmd+K then "My Profile"). Also surfaced at the top right of the developer portal under
+    the profile initials.
+  rotation: Reset from the "My Profile" page.
+  guidance_verbatim: >-
+    "Keep your access tokens private. Access tokens should never be exposed in untrusted contexts.
+    Never put an access token in client-side Javascript, or send it by email, instant messaging
+    apps etc."
+  source: https://developers.datorama.com/docs/manage/introduction/
+- name: MciServiceAccountOAuth2
+  type: oauth2
+  flow: service-account (private-key assertion against an IdP discovered from the key file)
+  applies_to: [MCI MCP server]
+  description: >-
+    The @datorama/mci-mcp-sdk MCP server mints and refreshes a short-lived bearer from a
+    service-account artifact JSON containing serviceAccountId, discoveryEndpoint and privateKey.
+    The token URL is derived from the key file; there is no separately configured IdP URL. The
+    bearer is injected into every proxied MCP message as `Authorization: Bearer ...`.
+  token_storage: >-
+    Short-lived bearer only, written atomically at mode 0600 in a 0700 state dir. The private key
+    is held in memory only — never logged, never on argv, never persisted.
+  source: https://www.npmjs.com/package/@datorama/mci-mcp-sdk
+- name: AppSignatureJWT
+  type: http
+  scheme: bearer
+  bearer_format: JWT
+  applies_to: [Marketplace app -> third-party server calls]
+  description: >-
+    A Marketplace app calls `POST /v1/signatures` to have Intelligence issue a signed JWT, sends it
+    to its own third-party backend as `Authorization: Bearer <jwt>`, and that backend calls
+    `POST https://api.datorama.com/v1/signatures/verify` to confirm the request really originated
+    from Intelligence. A verified response returns globalId, appInstanceId, env and userId — the
+    tuple that uniquely identifies app + installation + user + environment. Unverified returns HTTP
+    403 and the third-party server must halt.
+  source: https://developers.datorama.com/docs/build/apps/making-api-calls/
+connector_authentication:
+  note: >-
+    Separate from API consumer auth — this is how a CUSTOM CONNECTOR authenticates to the data
+    source it pulls from. Exactly one method must be implemented per connector.
+  methods:
+  - id: user-password
+    description: >-
+      Intelligence POSTs {"username","password"} as application/json to the connector's configured
+      loginUrl; the connector returns {"success": bool, "token": string} and the token is put on
+      the headers of every subsequent data request in that data-stream run.
+    config_shape: '{"userPassDetails": {"loginUrl": String}}'
+  source: https://developers.datorama.com/docs/build/connectors/authentication/
+permissions:
+  model: role-based, enforced server-side on the token's user
+  description: >-
+    Platform and Query endpoints serve all user roles; responses are FILTERED by role. For lower
+    roles (viewer, analyst, editor) some attributes are omitted or returned as null. Endpoints
+    restricted to specific roles say so in their own documentation.
+  roles_reference: https://help.salesforce.com/s/articleView?id=sf.dato_getstarted_roles.htm&type=5
+  app_note: >-
+    Apps are typically installed by an Admin and then shared with non-admin users; calls that
+    require admin rights should be made during the INSTALL phase and their results persisted with
+    saveConfig.

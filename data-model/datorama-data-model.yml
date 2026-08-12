@@ -1,0 +1,185 @@
+generated: '2026-08-12'
+method: searched
+source: https://developers.datorama.com/docs/manage/
+docs_root: https://developers.datorama.com/docs/manage/
+note: >-
+  Entity-relationship graph for the Intelligence (Datorama) Platform API. There is no OpenAPI to
+  derive from, so this is read from the object tables the developer portal publishes on each
+  /docs/manage/<entity>/ page — every relationship below is backed by an id-reference field that
+  appears verbatim in that entity's own field table. Field tables render; the endpoint (method +
+  path) tables on the same pages do NOT, because the deployed Gatsby bundle is missing the modules
+  that hold them, so operations are not enumerated here.
+id_convention:
+  type: integer
+  prefixes: none
+  note: >-
+    All Intelligence entity ids are plain integers. There are no typed/prefixed ids (no `ws_`,
+    `acc_`), so an id is only meaningful alongside its entity type.
+timestamps:
+  type: unix-epoch-milliseconds
+  fields: [createTime, updateTime]
+common_fields:
+  name: entity history
+  applies_to: every Platform API entity
+  fields: [createUserId, createUser, createTime, updateUserId, updateUser, updateTime]
+  writable: false
+hierarchy:
+  - Account
+  - Workspace (belongs to Account; may be an "executive workspace" aggregating sub-workspaces)
+  - "Data plane: Data Streams -> Buckets -> Dimensions / Measurements"
+  - "Presentation plane: Dashboards -> Pages -> Reports / Report Schedulers -> Report Jobs"
+entities:
+- name: Account
+  docs: https://developers.datorama.com/docs/manage/accounts/
+  references: [cultureId, currencyId, timezoneId]
+  relationships:
+  - {type: has_many, target: Workspace, via: accountId}
+  - {type: has_many, target: User, via: accountId}
+  - {type: has_many, target: PermissionSet, via: accountId}
+  - {type: belongs_to, target: Currency, via: currencyId}
+  - {type: belongs_to, target: Culture, via: cultureId}
+  - {type: belongs_to, target: TimeZone, via: timezoneId}
+- name: Workspace
+  docs: https://developers.datorama.com/docs/manage/workspaces/
+  references: [accountId, verticalId, colorSchemeId, currencyId, accountCurrencyId, cultureId, timezoneId, dashboardThemeId]
+  relationships:
+  - {type: belongs_to, target: Account, via: accountId}
+  - {type: belongs_to, target: Vertical, via: verticalId}
+  - {type: belongs_to, target: Currency, via: currencyId}
+  - {type: belongs_to, target: TimeZone, via: timezoneId}
+  - {type: belongs_to, target: Culture, via: cultureId}
+  - {type: has_many, target: Workspace, via: subWorkspaces, note: only when executiveWorkspace is true}
+  - {type: has_many, target: Bucket, via: visibleBuckets}
+  - {type: has_many, target: DataStream, via: workspaceId}
+  - {type: has_many, target: Dashboard, via: workspaceId}
+  - {type: has_many, target: Page, via: workspaceId}
+  - {type: has_many, target: Report, via: workspaceId}
+  key_flags: [costCenterEnabled, executiveWorkspace, customCalendarEnabled, customLocationEnabled, applyBlindPeriods, archivingEnabled, liteConnectEnabled, workflowsEnabled, actionCenterEnabled, balanceBudgetToolEnabled, hourlyProcessingAllowed]
+- name: User
+  docs: https://developers.datorama.com/docs/manage/users/
+  references: [accountId, currentAccountId, languageId]
+  relationships:
+  - {type: belongs_to, target: Account, via: accountId}
+  - {type: has_many, target: PermissionSet, via: permissionSetId}
+- name: PermissionSet
+  docs: https://developers.datorama.com/docs/manage/permission-sets/
+  references: [accountId, workspaceId, permissionSetId]
+  relationships:
+  - {type: belongs_to, target: Account, via: accountId}
+  - {type: belongs_to, target: Workspace, via: workspaceId}
+- name: DataStream
+  docs: https://developers.datorama.com/docs/manage/data-streams/
+  references: [workspaceId, dataSourceId, dataSourceAuthenticationId, channelId, templateId, originalId, originalDataStreamId, parentInstanceId, dataPreviewPageId]
+  relationships:
+  - {type: belongs_to, target: Workspace, via: workspaceId}
+  - {type: belongs_to, target: Connector, via: dataSourceId}
+  - {type: belongs_to, target: DataSourceAuthentication, via: dataSourceAuthenticationId}
+  - {type: has_many, target: DataStreamStats, via: dataStreamId}
+- name: DataStreamStats
+  docs: https://developers.datorama.com/docs/manage/data-stream-stats/
+  references: [dataStreamId, userId]
+  relationships:
+  - {type: belongs_to, target: DataStream, via: dataStreamId}
+  - {type: belongs_to, target: User, via: userId}
+- name: DataSourceAuthentication
+  docs: https://developers.datorama.com/docs/manage/data-source-authentications/
+  references: [accountId, workspaceId, dataSourceId]
+  relationships:
+  - {type: belongs_to, target: Account, via: accountId}
+  - {type: belongs_to, target: Workspace, via: workspaceId}
+  - {type: belongs_to, target: Connector, via: dataSourceId}
+- name: Connector
+  docs: https://developers.datorama.com/docs/manage/connectors/
+  relationships:
+  - {type: has_many, target: DataStream, via: dataSourceId}
+- name: Bucket
+  docs: https://developers.datorama.com/docs/manage/buckets/
+  references: [workspaceId]
+  note: >-
+    Data-type enum on the workspace (ADS, AD_VERIFICATION, PRODUCTS, SEARCH_KEYWORDS,
+    SOCIAL_OBJECTS, WEB_ANALYTICS, BUY_DATA, CRM, EMAIL_MARKET, COMPETITIVE, CUSTOM_CLASSIFICATION_1-5, ...)
+    that constrains which data streams can be created.
+- name: Dimension
+  docs: https://developers.datorama.com/docs/manage/dimensions/
+- name: HarmonizedDimension
+  docs: https://developers.datorama.com/docs/manage/harmonized-dimensions/
+  references: [workspaceId]
+  relationships:
+  - {type: has_many, target: Pattern, via: harmonizedDimensionId}
+- name: Pattern
+  docs: https://developers.datorama.com/docs/manage/patterns/
+  references: [workspaceId, harmonizedDimensionId]
+  relationships:
+  - {type: belongs_to, target: HarmonizedDimension, via: harmonizedDimensionId}
+- name: CalculatedDimension
+  docs: https://developers.datorama.com/docs/manage/calculated-dimensions/
+  references: [workspaceId, originalId]
+- name: Measurement
+  docs: https://developers.datorama.com/docs/manage/measurements/
+- name: CalculatedMeasurement
+  docs: https://developers.datorama.com/docs/manage/calculated-measurements/
+  references: [workspaceId, originalId]
+- name: FilteredMeasurement
+  docs: https://developers.datorama.com/docs/manage/filtered-measurements/
+  references: [workspaceId, originalId]
+- name: DataFusion
+  docs: https://developers.datorama.com/docs/manage/data-fusions/
+  references: [workspaceId, originalId]
+- name: DataLake
+  docs: https://developers.datorama.com/docs/manage/data-lakes/
+- name: DynamicSchema
+  docs: https://developers.datorama.com/docs/manage/dynamic-schemas/
+- name: Dashboard
+  docs: https://developers.datorama.com/docs/manage/dashboards/
+  references: [workspaceId, dashboardThemeId, originalId]
+  relationships:
+  - {type: belongs_to, target: Workspace, via: workspaceId}
+  - {type: has_many, target: Page, via: dashboardId}
+- name: Page
+  docs: https://developers.datorama.com/docs/manage/pages/
+  references: [workspaceId, dashboardId, themeId, sourceTemplateId, appInstanceId]
+  relationships:
+  - {type: belongs_to, target: Dashboard, via: dashboardId}
+  - {type: belongs_to, target: Workspace, via: workspaceId}
+- name: Report
+  docs: https://developers.datorama.com/docs/manage/reports/
+  references: [workspaceId, dashboardId, pageId, widgetId, originalId]
+  relationships:
+  - {type: belongs_to, target: Workspace, via: workspaceId}
+  - {type: belongs_to, target: Dashboard, via: dashboardId}
+  - {type: belongs_to, target: Page, via: pageId}
+  - {type: has_many, target: ReportJob, via: reportId}
+  - {type: has_many, target: ReportScheduler, via: reportId}
+- name: ReportScheduler
+  docs: https://developers.datorama.com/docs/manage/report-schedulers/
+  references: [reportId]
+  relationships:
+  - {type: belongs_to, target: Report, via: reportId}
+- name: ReportJob
+  docs: https://developers.datorama.com/docs/manage/report-jobs/
+  references: [reportId, reportScheduleId]
+  relationships:
+  - {type: belongs_to, target: Report, via: reportId}
+  - {type: belongs_to, target: ReportScheduler, via: reportScheduleId}
+- name: Action
+  docs: https://developers.datorama.com/docs/manage/actions/
+  references: [actionId, workspaceId, sourceId, sourceJobId, datoramaUserId]
+- name: InsightsBot
+  docs: https://developers.datorama.com/docs/manage/insights-bot/
+  references: [insightsBotId, workspaceId, botJobId]
+- name: MediaTransparencyCenter
+  docs: https://developers.datorama.com/docs/manage/media-transparency-center/
+  references: [workspaceId]
+- name: SandboxOperation
+  docs: https://developers.datorama.com/docs/manage/sandbox-operations/
+  references: [sandboxEntityId]
+  objects: [Sandbox Management Object, Deployment Request Object]
+reference_entities:
+  docs: https://developers.datorama.com/docs/manage/reference/
+  description: >-
+    Static lists referenced by id from other entities — "Reference entities are static lists of
+    objects commonly referenced by ID from other Intelligence entities."
+  entities: [Currency, TimeZone, Culture, Vertical, ColorScheme, DashboardTheme, Language, Bucket, UiTheme, DeliveryMethod]
+gaps:
+- Operation lists (method + path per entity) are not machine-readable — see lifecycle/ decay signals.
+- No JSON Schema, no OpenAPI components, no published ERD.

@@ -1,0 +1,59 @@
+generated: '2026-08-12'
+method: searched
+source: https://developers.datorama.com/docs/build/apps/quick-start/
+docs:
+- https://developers.datorama.com/docs/build/apps/quick-start/
+- https://developers.datorama.com/docs/build/apps/local-development/
+name: Datorama CLI
+binary: dato
+package: '@datorama/cli'
+package_url: https://www.npmjs.com/package/@datorama/cli
+version: 0.5.4
+published: '2023-09-14'
+official: true
+purpose: >-
+  Develop an Intelligence (Datorama) Marketplace app on localhost, outside the Intelligence
+  platform. The CLI initializes the JavaScript SDK, authorizes API calls with the developer's
+  Intelligence API token, and must stay running while developing.
+install:
+- method: npm-global
+  command: npm install -g @datorama/cli
+flags:
+- flag: --token
+  value: YOUR_API_TOKEN
+  description: >-
+    Sets a new Intelligence personal API access token. Only needed once; subsequent runs can omit
+    it. The token is generated in the Intelligence platform under "My Profile".
+- flag: --env
+  value: app-eu | app-eu2 | app-us2
+  description: >-
+    Selects the regional environment. app-eu = EU on AWS, app-eu2 = EU2 on Azure, app-us2 = US2 on
+    Azure. Omit for the default US environment.
+interactive_flow:
+- Select Workspace
+- Select a Test App (created under Apps > Dev Playground in the Intelligence platform)
+- Authenticated — CLI stays open while developing
+runtime_keys:
+- key: m
+  action: >-
+    Toggle app run mode between DEMO, RUN and INSTALL. The CLI starts in INSTALL mode; the mode is
+    surfaced to the app in the DA.app.onLoad callback.
+- key: r
+  action: Refresh CLI authentication for the currently selected test app.
+limitations:
+  note: >-
+    Not every SDK method is supported through the CLI, because the app runs on localhost outside
+    the platform.
+  unsupported_methods:
+  - DA.app.install
+  - DA.app.navigateToDashboardPage
+  - DA.app.navigateToMarketplace
+  - DA.app.navigateToEntity
+  - DA.app.navigateToEntityList
+  - DA.app.installInBackground
+  - DA.app.saveConfig
+  - DA.app.navigateToInsightsBot
+prerequisites:
+- Node.js and npm
+- An Intelligence API access token (paid feature; requires user-level activation)
+- A test app defined in the Intelligence Dev Playground

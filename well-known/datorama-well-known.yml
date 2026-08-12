@@ -1,0 +1,72 @@
+generated: '2026-08-12'
+method: probed
+source: live HTTPS probes on 2026-08-12
+result: none
+note: >-
+  No /.well-known/ document is served on any Datorama host. Every 200 recorded below is a
+  single-page-app or marketing-site catch-all returning an HTML shell for any path — NOT a
+  document. datorama.com/www.datorama.com 301 to salesforce.com/marketing/analytics/ and answer
+  every path with the ~481KB Salesforce marketing page; api.datorama.com and
+  platform.datorama.com answer every path with the same 6,919-byte platform SPA shell;
+  developers.datorama.com (Gatsby) returns its 404 page with HTTP 404. Recorded as an absence on
+  purpose — no WellKnown or SecurityTxt pointer is emitted from this file.
+hosts:
+- host: https://datorama.com
+  documents:
+  - {path: /.well-known/security.txt, status: 200, content_type: text/html, real_document: false, note: marketing-page catch-all}
+  - {path: /.well-known/openid-configuration, status: 200, content_type: text/html, real_document: false, note: marketing-page catch-all}
+  - {path: /.well-known/oauth-authorization-server, status: 200, content_type: text/html, real_document: false, note: marketing-page catch-all}
+  - {path: /.well-known/oauth-protected-resource, status: 200, content_type: text/html, real_document: false, note: marketing-page catch-all}
+  - {path: /.well-known/api-catalog, status: 200, content_type: text/html, real_document: false, note: marketing-page catch-all}
+  - {path: /.well-known/ai-plugin.json, status: 200, content_type: text/html, real_document: false, note: marketing-page catch-all}
+  - {path: /.well-known/agent-card.json, status: 200, content_type: text/html, real_document: false, note: marketing-page catch-all}
+  - {path: /.well-known/agent.json, status: 200, content_type: text/html, real_document: false, note: marketing-page catch-all}
+- host: https://www.datorama.com
+  documents:
+  - {path: /.well-known/security.txt, status: 200, content_type: text/html, real_document: false}
+  - {path: /.well-known/openid-configuration, status: 200, content_type: text/html, real_document: false}
+  - {path: /.well-known/oauth-authorization-server, status: 200, content_type: text/html, real_document: false}
+  - {path: /.well-known/oauth-protected-resource, status: 200, content_type: text/html, real_document: false}
+  - {path: /.well-known/api-catalog, status: 200, content_type: text/html, real_document: false}
+  - {path: /.well-known/ai-plugin.json, status: 200, content_type: text/html, real_document: false}
+  - {path: /.well-known/agent-card.json, status: 200, content_type: text/html, real_document: false}
+  - {path: /.well-known/agent.json, status: 200, content_type: text/html, real_document: false}
+- host: https://api.datorama.com
+  documents:
+  - {path: /.well-known/security.txt, status: 200, content_type: text/html, real_document: false, note: platform SPA shell (6919 bytes)}
+  - {path: /.well-known/openid-configuration, status: 200, content_type: text/html, real_document: false}
+  - {path: /.well-known/oauth-authorization-server, status: 200, content_type: text/html, real_document: false}
+  - {path: /.well-known/oauth-protected-resource, status: 200, content_type: text/html, real_document: false}
+  - {path: /.well-known/api-catalog, status: 200, content_type: text/html, real_document: false}
+  - {path: /.well-known/ai-plugin.json, status: 200, content_type: text/html, real_document: false}
+  - {path: /.well-known/agent-card.json, status: 200, content_type: text/html, real_document: false}
+  - {path: /.well-known/agent.json, status: 200, content_type: text/html, real_document: false}
+- host: https://platform.datorama.com
+  documents:
+  - {path: /.well-known/security.txt, status: 200, content_type: text/html, real_document: false}
+  - {path: /.well-known/openid-configuration, status: 200, content_type: text/html, real_document: false}
+  - {path: /.well-known/oauth-authorization-server, status: 200, content_type: text/html, real_document: false}
+  - {path: /.well-known/oauth-protected-resource, status: 200, content_type: text/html, real_document: false}
+  - {path: /.well-known/api-catalog, status: 200, content_type: text/html, real_document: false}
+  - {path: /.well-known/ai-plugin.json, status: 404, real_document: false}
+  - {path: /.well-known/agent-card.json, status: 404, real_document: false}
+  - {path: /.well-known/agent.json, status: 404, real_document: false}
+- host: https://developers.datorama.com
+  documents:
+  - {path: /.well-known/security.txt, status: 404, real_document: false}
+  - {path: /.well-known/openid-configuration, status: 404, real_document: false}
+  - {path: /.well-known/oauth-authorization-server, status: 404, real_document: false}
+  - {path: /.well-known/oauth-protected-resource, status: 404, real_document: false}
+  - {path: /.well-known/api-catalog, status: 404, real_document: false}
+  - {path: /.well-known/ai-plugin.json, status: 404, real_document: false}
+  - {path: /.well-known/agent-card.json, status: 404, real_document: false}
+  - {path: /.well-known/agent.json, status: 404, real_document: false}
+related_probes:
+- {url: 'https://developers.datorama.com/llms.txt', status: 404, note: Gatsby 404 page}
+- {url: 'https://developers.datorama.com/robots.txt', status: 404, note: no robots.txt served}
+- {url: 'https://www.salesforce.com/.well-known/security.txt', status: 404, note: the parent brand does not serve one either}
+a2a:
+  agent_card_found: false
+  note: >-
+    No A2A agent card on any host. Every 200 above is an HTML catch-all and is rejected per the
+    pipeline rule; no a2a/ artifact is written.

@@ -1,0 +1,82 @@
+generated: '2026-08-12'
+method: searched
+source: https://developers.datorama.com/docs/query/introduction/
+docs:
+- https://developers.datorama.com/docs/query/introduction/
+- https://developers.datorama.com/docs/manage/introduction/
+- https://developers.datorama.com/docs/build/apps/making-api-calls/
+format: http-status
+rfc9457: false
+note: >-
+  Datorama publishes no error-code registry and no RFC 9457 problem+json envelope. What it does
+  publish is a small set of documented failure behaviours, captured verbatim below. The most
+  important one is a real agent hazard: the Query API returns SOME errors inside an HTTP 200, so a
+  client that branches on status alone will silently treat a failure as a result set. Nothing here
+  is inferred — every entry cites the page that states it.
+envelope:
+  query_api:
+    field: errors
+    rule_verbatim: >-
+      "When receiving the response from the Intelligence Query API, if the response code is 200,
+      you must first check if the `errors` property in the returned object is empty. If it is, the
+      object will contain the query results. If not, the `errors` property will contain details on
+      the error."
+  platform_api:
+    field: null
+    note: No documented error body shape for the Platform API.
+problems:
+- status: 422
+  title: Unprocessable Entity
+  api: Intelligence Query API
+  cause: >-
+    Errors while trying to parse the query request — ambiguous fields, fields not found, and
+    similar request-shape failures.
+  remediation: >-
+    Validate the dimension/measurement names against the workspace. Generate the query with the
+    in-platform Query API Builder (Reports > Query API Builder) and use `useSystemNames=true` if
+    display names are ambiguous.
+  source: https://developers.datorama.com/docs/query/introduction/
+- status: 200
+  title: Runtime error returned with a success status
+  api: Intelligence Query API
+  cause: >-
+    Errors while trying to retrieve the requested data — request time out, too many rows, and
+    similar execution failures. Returned as HTTP 200 with a populated `errors` property.
+  remediation: >-
+    Always inspect `errors` before reading results. If the failure is size/time related, move the
+    workload to the asynchronous Reporting API (40-minute timeout, ~5M rows) instead of the
+    synchronous Query API (60-second timeout, ~600K rows).
+  agent_hazard: true
+  source: https://developers.datorama.com/docs/query/introduction/
+- status: 429
+  title: Too Many Requests
+  api: Intelligence Platform API, Intelligence Query API
+  cause: Per-minute rate limit or the 20,000/day per-user quota was exhausted.
+  response_headers: [X-RateLimit-Reset, X-DailyQuota-Rest]
+  remediation: >-
+    Read the reset headers (UTC epoch milliseconds) and apply a debounce / throttle / backoff
+    strategy, as the docs recommend. To raise the ceiling, contact the account manager.
+  source: https://developers.datorama.com/docs/manage/introduction/
+- status: 403
+  title: Unverified app signature
+  api: Signature verification (POST /v1/signatures/verify)
+  cause: >-
+    A JWT presented to `POST https://api.datorama.com/v1/signatures/verify` did not verify as
+    having originated from Intelligence.
+  remediation: >-
+    The third-party server must halt execution of the request immediately and must not use any data
+    sent from the app. Verbatim: "the request is deemed unauthorized, and your 3rd-party server
+    should halt the execution of the this request immediately." Datorama states this behaviour is
+    checked during Marketplace app code review.
+  source: https://developers.datorama.com/docs/build/apps/making-api-calls/
+role_filtering:
+  status: 200
+  note: >-
+    Not an error, but a documented silent-degradation path worth treating like one: "For lower
+    roles (e.g. viewers, analyst and editors) certain attributes in the response may be omitted or
+    may return with `null`." A missing field can mean "you lack the role", not "no value".
+  source: https://developers.datorama.com/docs/manage/introduction/
+gaps:
+- No enumerated error-code registry is published for either API.
+- No machine-readable error schema (no problem+json, no error catalog endpoint).
+- 4xx behaviour for the Platform API (401/403/404/409) is undocumented.

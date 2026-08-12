@@ -1,0 +1,78 @@
+generated: '2026-08-12'
+method: searched
+source: https://www.salesforce.com/marketing/analytics/pricing/
+source_note: >-
+  Datorama is Salesforce Marketing Cloud Intelligence since the August 2018 acquisition;
+  datorama.com 301s to salesforce.com/marketing/analytics/ and the legacy pricing URL
+  https://www.salesforce.com/editions-pricing/marketing-cloud/datorama/ 302s to this page. The
+  pricing therefore lives on the parent brand's domain by acquisition, not by mismatch.
+probed: '2026-08-12'
+plan_count: 2
+currency: USD
+billing_period: month, billed annually
+pricing_unit: per org (not per user)
+plans:
+- name: Marketing Intelligence
+  tagline: Improve performance with agentic marketing analytics.
+  price: 10000
+  currency: USD
+  unit: USD/Org/Month
+  billing: billed annually
+  other_currencies:
+  - {currency: EUR, price: 10000}
+  - {currency: GBP, price: 8000}
+  - {currency: AUD, price: 14000}
+  - {currency: JPY, price: 1200000}
+  - {currency: SEK, price: 100000}
+  includes:
+  - Agentforce Paid Media Optimization
+  - AI Campaign Summaries
+  - Automated Data Management
+  - Segment Intelligence
+  - Data Ingestion & Harmonization
+  - Pre-Built Marketing Data Model (Paid & Owned)
+  - AI-Powered Data Classifications
+  - Out-of-the-Box Data Visualizations
+  add_ons: [Media Planning, Media Pacing]
+  cta: Contact us
+- name: Marketing Cloud Intelligence+
+  tagline: Analyze all campaigns, channels, and platforms seamlessly.
+  price: 11000
+  currency: USD
+  unit: USD/Org/Month
+  billing: billed annually
+  other_currencies:
+  - {currency: EUR, price: 11000}
+  - {currency: GBP, price: 8800}
+  - {currency: AUD, price: 15400}
+  - {currency: JPY, price: 1320000}
+  - {currency: SEK, price: 110000}
+  includes:
+  - Includes Marketing Intelligence
+  - Agentforce Paid Media Optimization
+  - AI Campaign Summaries and Visualizations
+  - Automated Data Management
+  - Pre-Built Marketing Data Model (Paid, Owned & Earned)
+  - Media Planning
+  - Media Pacing
+  - Measurement & Attribution
+  - Goal Management
+  - Integrated UI
+  - Activation Center
+  cta: Contact us
+support_plans:
+- {name: Standard Success Plan, price: Included in all licenses}
+- {name: Premier Success Plan, price: 30% of net license fees, note: "Premier Support is stated to be included in all editions of Marketing Cloud Intelligence"}
+- {name: Signature Success Plan, price: Contact your account executive}
+api_access_gating:
+  free_tier: false
+  self_serve: false
+  note: >-
+    The API is not entitled by plan tier alone. The developer portal states: "API access is a paid
+    feature which depends on your account's plan and requires user-level activation by your account
+    manager / client success manager. If your user does not have API access enabled, you won't see
+    the access token in your profile page." There is no self-serve signup that yields an API token.
+  source: https://developers.datorama.com/docs/manage/introduction/
+disclaimer_verbatim: >-
+  "Premier Support included in all editions of Marketing Cloud Intelligence. This page is provided
+  for information purposes only and subject to change."

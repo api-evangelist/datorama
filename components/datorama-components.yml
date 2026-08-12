@@ -1,0 +1,57 @@
+generated: '2026-08-12'
+method: searched
+source: https://developers.datorama.com/docs/build/apps/app-components/
+docs:
+- https://developers.datorama.com/docs/build/apps/app-components/
+- https://developers.datorama.com/docs/build/apps/app-visualizations/
+- https://developers.datorama.com/docs/build/apps/branding-an-app/
+note: >-
+  Client-side UI surface for Intelligence (Datorama) Marketplace apps. These are React libraries a
+  developer installs into their own app, not hosted embeds. Distinct from the server-side SDKs in
+  packages/. Every library below last published in 2023 or earlier.
+families:
+- family: app-components
+  package: '@datorama/app-components'
+  registry: npm
+  version: 2.11.24
+  published: '2023-02-26'
+  license: MIT
+  description: >-
+    Shared ReactJS UI component library used to build Intelligence Marketplace apps so they match
+    the platform look and feel.
+  install: npm install --save @datorama/app-components
+  peer_dependencies: [moment, styled-components, lodash]
+  styles: "@import '~@datorama/app-components/dist/index.css';"
+  themes: [lightTheme, darkTheme]
+  usage: >-
+    Wrap the React app in <AppTheme theme={lightTheme} provider={ThemeProvider}> and pass theme
+    colors, typography and animations.
+  external_docs: http://app-components.herokuapp.com
+  external_docs_note: >-
+    The portal links the component gallery at app-components.herokuapp.com; Heroku free dynos were
+    retired in 2022, so this reference is expected to be dead.
+- family: marketplace-react
+  package: '@datorama/marketplace-react'
+  registry: npm
+  version: 0.25.37
+  published: '2023-02-09'
+  license: MIT
+  description: Datorama Marketplace React utilities.
+- family: marketplace-widgets
+  package: '@datorama/marketplace-widgets'
+  registry: npm
+  version: 0.4.5
+  published: '2020-10-28'
+  license: MIT
+  description: Datorama Marketplace React widget library.
+hosted_surfaces:
+- name: Dev Playground
+  description: >-
+    In-platform surface (Intelligence > Apps > Dev Playground) where a developer registers a test
+    app and runs it inside the platform against live data.
+  docs: https://developers.datorama.com/docs/build/apps/overview/
+- name: App run modes
+  description: >-
+    Apps render in one of three modes passed to DA.app.onLoad — DEMO (standalone, mocked data),
+    INSTALL (admin configuring the app, config JSON persisted server-side) and RUN (normal use).
+  docs: https://developers.datorama.com/docs/build/apps/installing-an-app/
