@@ -2,13 +2,12 @@ generated: '2026-08-12'
 method: searched
 status: published
 source: https://www.npmjs.com/package/@datorama/mci-mcp-sdk
-note: >-
-  Datorama is now Salesforce Marketing Cloud Intelligence (MCI). Salesforce/Datorama maintainers
-  published a first-party MCP server to the @datorama npm scope on 2026-07-21 — the only 2026
-  release anywhere in the company's package footprint. It is a LOCAL stdio server that owns the
-  OAuth2 service-account token lifecycle and pass-through-proxies MCP JSON-RPC to a tenant-hosted
-  MCI `/api/mcp` endpoint. It defines no tools of its own; the tool list comes from the tenant
-  server, so the real tool surface is auth-gated and per-tenant.
+note: Datorama is now Salesforce Marketing Cloud Intelligence (MCI). Salesforce/Datorama maintainers published
+  a first-party MCP server to the @datorama npm scope on 2026-07-21 — the only 2026 release anywhere in
+  the company's package footprint. It is a LOCAL stdio server that owns the OAuth2 service-account token
+  lifecycle and pass-through-proxies MCP JSON-RPC to a tenant-hosted MCI `/api/mcp` endpoint. It defines
+  no tools of its own; the tool list comes from the tenant server, so the real tool surface is auth-gated
+  and per-tenant.
 server:
   name: mci-mcp
   transport: stdio
@@ -16,9 +15,12 @@ server:
   version: 0.1.1
   published: '2026-07-21'
   command: npx
-  args: ['-y', '@datorama/mci-mcp-sdk']
+  args:
+  - -y
+  - '@datorama/mci-mcp-sdk'
   bin: mci-mcp-sdk
-  depends_on: ['@modelcontextprotocol/sdk']
+  depends_on:
+  - '@modelcontextprotocol/sdk'
   remote_endpoint: https://<your MCI environment host>/api/mcp
   remote_endpoint_templated: true
   homepage: https://www.salesforce.com/marketing/data-intelligence/
@@ -26,19 +28,17 @@ configuration:
   env:
   - name: PRIVATE_KEY_PATH
     required: true
-    description: >-
-      Path to the service-account artifact JSON issued to the customer. Contains serviceAccountId,
-      discoveryEndpoint and privateKey; the SDK derives the IdP/token URL from the file. Read
-      in-memory only.
+    description: Path to the service-account artifact JSON issued to the customer. Contains serviceAccountId,
+      discoveryEndpoint and privateKey; the SDK derives the IdP/token URL from the file. Read in-memory
+      only.
   - name: HOST
     required: true
     description: The tenant MCI MCP endpoint, ending in /api/mcp.
   - name: MCI_INSECURE_TLS
     required: false
     default: 'off'
-    description: >-
-      Allow a self-signed certificate. Honored only for dev hosts (localhost, 127.0.0.1,
-      *.dev.datorama.io); ignored for production.
+    description: Allow a self-signed certificate. Honored only for dev hosts (localhost, 127.0.0.1, *.dev.datorama.io);
+      ignored for production.
   - name: MCI_TIMEOUT_MS
     required: false
     default: '30000'
@@ -48,27 +48,23 @@ configuration:
     description: Override the bearer-token cache directory.
 authentication:
   model: oauth2-service-account
-  description: >-
-    The SDK mints a bearer token from a service-account private key against an IdP discovered from
-    the key file's discoveryEndpoint, caches it, and refreshes on demand. Every proxied MCP
-    message gets a fresh `Authorization: Bearer ...` injected. No token is pasted by the user.
+  description: 'The SDK mints a bearer token from a service-account private key against an IdP discovered
+    from the key file''s discoveryEndpoint, caches it, and refreshes on demand. Every proxied MCP message
+    gets a fresh `Authorization: Bearer ...` injected. No token is pasted by the user.'
   token_cache: short-lived bearer only, written atomically at mode 0600 inside a 0700 state dir
-  security_boundary: >-
-    The MCI server, not the SDK, is the security boundary — it re-validates every call and enforces
-    per-user authorization on the service-account identity regardless of what the client sends.
+  security_boundary: The MCI server, not the SDK, is the security boundary — it re-validates every call
+    and enforces per-user authorization on the service-account identity regardless of what the client
+    sends.
 tools:
   naming_convention: mci_*
-  discovery: >-
-    Live via tools/list against the tenant /api/mcp endpoint. New server-side tools appear with no
-    SDK update.
+  discovery: Live via tools/list against the tenant /api/mcp endpoint. New server-side tools appear with
+    no SDK update.
   observed:
   - name: mci_list_workspaces
-    source: >-
-      Named verbatim in the package README's stdio smoke-test command; no inputSchema is published
+    source: Named verbatim in the package README's stdio smoke-test command; no inputSchema is published
       anywhere public.
   schemas_available: false
-  schemas_note: >-
-    Input schemas require authenticated introspection against a customer's own MCI environment.
+  schemas_note: Input schemas require authenticated introspection against a customer's own MCI environment.
     Nothing is derived or guessed here.
 probe:
   attempted: '2026-08-12'
@@ -80,11 +76,29 @@ probe:
   - url: https://api.datorama.com/api/mcp
     method: POST tools/list
     http_status: 302
-    note: Redirects to the platform error page; the MCP endpoint is per-tenant, not on the shared API host.
-  conclusion: >-
-    The MCP endpoint is tenant-scoped and auth-gated. Presence is established from the first-party
+    note: Redirects to the platform error page; the MCP endpoint is per-tenant, not on the shared API
+      host.
+  conclusion: The MCP endpoint is tenant-scoped and auth-gated. Presence is established from the first-party
     published package, not from an anonymous tools/list.
 oauth_discovery_probes:
-- {url: 'https://platform.datorama.com/.well-known/oauth-authorization-server', http_status: 200, result: HTML SPA shell, not a document}
-- {url: 'https://platform.datorama.com/.well-known/oauth-protected-resource', http_status: 200, result: HTML SPA shell, not a document}
-- {url: 'https://api.datorama.com/.well-known/oauth-authorization-server', http_status: 200, result: HTML SPA shell, not a document}
+- url: https://platform.datorama.com/.well-known/oauth-authorization-server
+  http_status: 200
+  result: HTML SPA shell
+  not a document: null
+- url: https://platform.datorama.com/.well-known/oauth-protected-resource
+  http_status: 200
+  result: HTML SPA shell
+  not a document: null
+- url: https://api.datorama.com/.well-known/oauth-authorization-server
+  http_status: 200
+  result: HTML SPA shell
+  not a document: null
+deployment:
+  mode: none
+  endpoint: https://www.salesforce.com/marketing/data-intelligence/
+  verified: probed
+  probe: dead
+  note: the endpoint this manifest claimed did not answer; recorded as none rather than deleted so the
+    claim stays auditable
+  checked: '2026-08-12'
+  source: catalog MCP census
