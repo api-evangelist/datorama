@@ -21,6 +21,7 @@ accessModel:
   source:
   - https://www.salesforce.com/marketing/analytics/pricing/
   - https://developers.datorama.com/docs/manage/introduction/
+  - {url: 'https://datorama.com', status: 301, note: 'declared website redirects to https://www.salesforce.com/marketing/analytics/?redirect=datorama.com&bc=DB — a different registrable domain (datorama.com -> salesforce.com), possible rename or acquisition (probed 2026-09-03, roadmap#169)'}
   generated: '2026-08-12'
   method: searched
   note: >-
