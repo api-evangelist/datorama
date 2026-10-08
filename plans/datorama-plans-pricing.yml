@@ -76,3 +76,24 @@ api_access_gating:
 disclaimer_verbatim: >-
   "Premier Support included in all editions of Marketing Cloud Intelligence. This page is provided
   for information purposes only and subject to change."
+x-canonical:
+  generated: '2026-10-08'
+  vocabulary: all/0-working/economics/plans-canonical.yml
+  models:
+  - subscription
+  units: []
+  plans:
+  - name: Marketing Intelligence
+    access: other
+    model: subscription
+    model_how: derived
+    units:
+    - other
+    periods: []
+  - name: Marketing Cloud Intelligence+
+    access: other
+    model: subscription
+    model_how: derived
+    units:
+    - other
+    periods: []
