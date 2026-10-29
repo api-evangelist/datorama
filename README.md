@@ -64,6 +64,80 @@
 > Full detail: **[Where this data comes from](https://apievangelist.com/about/where-our-data-comes-from)**
 <!-- API-EVANGELIST-PROVENANCE:END -->
 
-Datorama is a company surfaced as a portfolio company of lightspeed-venture-partners and added to the API Evangelist network as a stub for enrichment. This profile is a lead awaiting the enrichment pipeline.
+> **Acquired or rebranded.** This company was acquired, merged or renamed. Its API, if it still exists, is offered under another name. This profile is kept as a historical record and is not maintained or rated.
 
-Backed by: lightspeed-venture-partners
+Datorama was a cloud-based marketing intelligence and analytics platform founded in 2012 in Tel Aviv and New York. It unified marketing, advertising, and sales data from thousands of disparate sources into a single AI-powered reporting and dashboarding layer, using its "Genius" machine learning engine to automate data harmonization across ad, social, web, and CRM APIs. Salesforce acquired Datorama in August 2018 for a reported ~$800 million and rebranded it as Salesforce Marketing Cloud Intelligence. The marketing, pricing, legal, trust and support surfaces have moved to salesforce.com, but the developer surface is still live on the original domain: a Gatsby developer portal at developers.datorama.com documents an Intelligence Platform API and a synchronous Query API on https://api.datorama.com/v1, both authenticated with a per-user personal access token in an Authorization header, both rate limited per user (60 platform req/min, 200 query req/min, 20,000 calls/day UTC) with X-PlatformRateLimit-*, X-QueryRateLimit-* and X-DailyQuota-* response headers, plus an asynchronous Reporting API for large exports, a header-switched sandbox mode, an Apps JavaScript SDK and a `dato` CLI on npm, a custom-connector framework, and — new in July 2026 — a first-party MCP server (@datorama/mci-mcp-sdk) that proxies MCP JSON-RPC to a tenant /api/mcp endpoint using an OAuth2 service-account key. No OpenAPI, AsyncAPI, GraphQL SDL, llms.txt, /.well-known/ document or A2A agent card is published anywhere on the surface. This profile entered the API Evangelist network as a lightspeed-venture-partners portfolio lead.
+
+**Areas:** Company · Analytics · Marketing · Marketing Intelligence · Advertising · Data · Business Intelligence · Reporting · Salesforce · Marketing Analytics · Data Harmonization · Dashboards
+
+## Datorama on APIs.io (historical record)
+
+Everything profiled for Datorama is published on APIs.io rather than in this repository. Start at the provider page — **[apis.io/providers/datorama/](https://apis.io/providers/datorama/)** — or go straight to one of the APIs or properties below.
+
+### APIs (2)
+
+- [Intelligence Platform API](https://apis.io/apis/datorama/intelligence-platform-api/) — REST API to set up, manage and administer a Marketing Cloud Intelligence (Datorama) account — accounts, workspaces, users, permission sets, data streams,…
+- [Intelligence Query API](https://apis.io/apis/datorama/intelligence-query-api/) — Synchronous JSON query API for reading harmonized Marketing Cloud Intelligence (Datorama) data out into any other platform, including all classifications…
+
+### Published properties
+
+Each property below is a page on APIs.io carrying the machine-readable artifact and what it says.
+
+#### MCP servers (1)
+
+Model Context Protocol servers that expose the API to agents.
+
+- [mci-mcp](https://apis.io/servers/datorama/mci-mcp/)
+
+#### Security (4)
+
+Authentication, trust centre, and vulnerability disclosure.
+
+- [Datorama Authentication](https://apis.io/security/datorama/datorama-authentication/)
+- [Datorama Domain Security](https://apis.io/security/datorama/datorama-domain-security/)
+- [Datorama Trust Center](https://apis.io/security/datorama/datorama-trust-center/)
+- [Datorama Vulnerability Disclosure](https://apis.io/security/datorama/datorama-vulnerability-disclosure/)
+
+#### Plans and pricing (1)
+
+Published plans, tiers and prices.
+
+- [Datorama Plans Pricing](https://apis.io/plans/datorama/datorama-plans-pricing/)
+
+#### Rate limits (1)
+
+Published request limits.
+
+- [Datorama Rate Limits](https://apis.io/rate-limits/datorama/datorama-rate-limits/)
+
+## Where to find this API
+
+Links to the company's own pages. This repository publishes no copy of their specifications — the canonical document is theirs and lives at the URLs below.
+
+- [Website](https://datorama.com)
+- [Documentation](https://developers.datorama.com/docs/)
+- [Getting started](https://developers.datorama.com/docs/build/apps/quick-start/)
+- [API reference](https://developers.datorama.com/docs/manage/reference/)
+- [Pricing](https://www.salesforce.com/marketing/analytics/pricing/)
+- [Support](https://help.salesforce.com/s/)
+- [Security](https://security.salesforce.com/responsible-disclosure-policy/)
+- [Compliance](https://compliance.salesforce.com/en/services/marketing-cloud-intelligence)
+- [Terms of service](https://www.salesforce.com/company/legal/sfdc-website-terms-of-service/)
+- [Privacy policy](https://www.salesforce.com/company/legal/privacy/)
+- [Status](https://status.salesforce.com/products/Datorama)
+
+## API Evangelist rating
+
+**Not rated** — this company is recorded as acquired or rebranded, so no score is published. If it is in fact operating, say so on this repository and it will be re-profiled.
+
+## How this profile is made
+
+API Evangelist profiles a company's public API surface the way a developer would find it: the website, developer portal and documentation, the specifications it publishes, its public repositories, and its pricing, status and changelog pages. From that it derives the properties above — contracts split per API, workflows, schemas, collections, governance rules, plans and rate limits — and scores them against the published [Kin Score rubric](https://github.com/api-evangelist/kin-score).
+
+The artifacts are published on [APIs.io](https://apis.io), not in this repository. This repository is the public record for Datorama: the place to say something is wrong, missing or out of date, and to ask for a re-score or a removal.
+
+## Open an issue
+
+- **Something about this listing** — a wrong description, a missing API, a stale artifact or a question about the rating: [open an issue on this repository](https://github.com/api-evangelist/datorama/issues/new).
+- **A new API, or one that is not in the catalog yet** — [submit it on APIs.io](https://apis.io/add/).
+- **Anything else** — [the APIs.io inbox](https://github.com/api-search/inbox/issues/new) or [info@apievangelist.com](mailto:info@apievangelist.com).
